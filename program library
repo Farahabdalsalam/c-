@@ -1,0 +1,126 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Library library = new Library();
+        int choice;
+
+        do
+        {
+            Console.WriteLine("\n--- Library Catalogue ---");
+            Console.WriteLine("1. Add a Book");
+            Console.WriteLine("2. Search for a Book");
+            Console.WriteLine("3. Display All Books");
+            Console.WriteLine("4. Check Availability");
+            Console.WriteLine("5. Exit");
+            Console.Write("Enter your choice: ");
+            choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    library.AddBook();
+                    break;
+                case 2:
+                    library.SearchBook();
+                    break;
+                case 3:
+                    library.DisplayBooks();
+                    break;
+                case 4:
+                    library.CheckAvailability();
+                    break;
+                case 5:
+                    Console.WriteLine("Exiting... Goodbye!");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (choice != 5);
+    }
+}
+
+class Book
+{
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public bool IsAvailable { get; set; }
+
+    public Book(string title, string author, bool isAvailable)
+    {
+        Title = title;
+        Author = author;
+        IsAvailable = isAvailable;
+    }
+}
+
+class Library
+{
+    private List<Book> books = new List<Book>();
+
+    public void AddBook()
+    {
+        Console.Write("Enter the book title: ");
+        string title = Console.ReadLine();
+
+        Console.Write("Enter the book author: ");
+        string author = Console.ReadLine();
+
+        Console.Write("Is the book available? (yes/no): ");
+        bool isAvailable = Console.ReadLine().ToLower() == "yes";
+
+        books.Add(new Book(title, author, isAvailable));
+        Console.WriteLine("Book added successfully!");
+    }
+
+    public void SearchBook()
+    {
+        Console.Write("Enter the title or author to search: ");
+        string query = Console.ReadLine().ToLower();
+
+        foreach (var book in books)
+        {
+            if (book.Title.ToLower().Contains(query) || book.Author.ToLower().Contains(query))
+            {
+                Console.WriteLine($"Found: {book.Title} by {book.Author} - {(book.IsAvailable ? "Available" : "Not Available")}");
+                return;
+            }
+        }
+        Console.WriteLine("Book not found.");
+    }
+
+    public void DisplayBooks()
+    {
+        if (books.Count == 0)
+        {
+            Console.WriteLine("No books in the library.");
+            return;
+        }
+
+        Console.WriteLine("\n--- Library Books ---");
+        foreach (var book in books)
+        {
+            Console.WriteLine($"{book.Title} by {book.Author} - {(book.IsAvailable ? "Available" : "Not Available")}");
+        }
+    }
+
+    public void CheckAvailability()
+    {
+        Console.Write("Enter the book title to check availability: ");
+        string title = Console.ReadLine().ToLower();
+
+        foreach (var book in books)
+        {
+            if (book.Title.ToLower() == title)
+            {
+                Console.WriteLine(book.IsAvailable ? "The book is available." : "The book is not available.");
+                return;
+            }
+        }
+        Console.WriteLine("Book not found.");
+    }
+}
